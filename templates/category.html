@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block title %}
-    E-Bazar - Home
+    E-Bazar - {{category}}
 {% endblock title %}
 
 {% block content %}
@@ -10,7 +10,7 @@
 <!-- Product Cart Start -->
 <div class="container">
     <div class=" w-100 mt-4">
-        <h4 class="d-block" >Recently Products</h4>
+        <h4 class="d-block" >Recently Products in {{ category }}</h4>
         <div class="d-flex flex-wrap justify-content-between">
             <!-- Product Cart Start -->
             {% for i in products %}

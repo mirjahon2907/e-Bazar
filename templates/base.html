@@ -26,8 +26,11 @@
                   <button type="button" class="btn  dropdown-toggle" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
                     Categories
                   </button>
+                  
                   <ul class="dropdown-menu dropdown-menu-end dropdown-menu-lg">
-                      <li><a class="dropdown-item" href="#">Mobile Phones</a></li>
+                    {% for i in categories %}
+                    <li><a class="dropdown-item" href="{% url 'main:category' i.name %}">{{i.name}}</a></li>
+                    {% endfor %}
                   </ul>
                 </div>
               </li>
@@ -55,12 +58,12 @@
                   </button>
                   <ul class="dropdown-menu dropdown-menu-end dropdown-menu-lg">
                     <li><a class="dropdown-item" href="#">Profile</a></li>
-                    <li><a class="dropdown-item" href="#">Change password</a></li>
-                    <li><a class="dropdown-item" href="#">Logout</a></li>
+                    <li><a class="dropdown-item" href="{% url 'password_change' %}">Change password</a></li>
+                    <li><a class="dropdown-item" href="{% url 'login' %}">Logout</a></li>
                   </ul>
                 {% else %}
-                  <a href="#" class="btn btn-primary">Login</a>
-                  <a href="#" class="btn btn-primary">SignUp</a>
+                  <a href="{% url 'login' %}" class="btn btn-primary">Login</a>
+                  <a href="{% url 'users:signup' %}" class="btn btn-primary">SignUp</a>
                 {% endif %}
               </div>
           </div>
@@ -81,7 +84,7 @@
     </div>   -->
       
     <div class="footer m-5 mb-3 ">
-        <center class="text-muted" >Mirjahon Codes | 2023</center>
+        <center class="text-muted" >Mirjahon Codes | 2026</center>
     </div>
     <!-- <script src="{% static 'scripts.js' %}" ></script> -->
     <!-- <script src="js/bootstrap.bundle.min.js"></script> -->
