@@ -10,14 +10,19 @@ def for_all_pages(request):
 
 
 class IndexView(View):
-    def get(self,requests):
+    def get(self,request):
         products = Product.objects.all()
-        return render(requests, "index.html", {'products': products})
+        q=request.GET.get('q','')
+        if q:
+            products = Product.objects.filter(title__icontains=q)
+        return render(request, "index.html", {'products': products})
 
 
 class CategoryView(View):
-    def get(self,requests, category_name):
+    def get(self,request, category_name):
         category = get_object_or_404(Category,name=category_name)
         products = Product.objects.filter(category=category)
-
-        return render(requests, "category.html", {'category': category,'products': products})
+        q=request.GET.get('q','')
+        if q:
+            products = Product.objects.filter(title__icontains=q,category=category)
+        return render(request, "category.html", {'category': category,'products': products})
