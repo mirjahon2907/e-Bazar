@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+    E-bazar - {{product.title}}
+{% endblock title %}
+
+{% block content %}
+
+<!-- Product Detail Start -->
+    <div class="container">
+        <div class=" w-100 mt-5 ">
+            <div class="row shadow-sm ">
+                <div class="col-4 p-3">
+                    <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-inner">
+                            {% for i in product.productimage_set.all %}
+                            <div class="carousel-item active thumbnail shadow-sm ">
+                                <img class="d-block w-100 " width="400" height="270" src="{{ i.image.url }}" alt="">
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                  </div> 
+                </div>
+                <div class="col-7 p-5 ">
+                    <h4>{{ product.title }}</h4>
+                    <p class="test-muted"><a href="{% url 'users:profile' product.author.username %}">{{ product.author.username }}</a> | {{product.date.date}}</p>
+                    <p >{{ product.description|safe }}</p>
+                    <div class="contact mt-4 ">
+                        {% if request.user == product.author %}
+                            <a class="btn btn-warning" href="{% url 'products:product_update' product.id %}">Edit details</a>
+                        {% endif %}
+                        <a class="btn btn-primary" href="mailto:{{custom_user.email}}">Email</a>
+                        <a class="btn btn-primary" href="tel:{{product.phone_number}}">Call</a>
+                        <a class="btn btn-primary" href="http://t.me/{{product.tg_username}}">Telegram</a>
+                    </div>
+                </div>
+            </div>
+            <div class="row ">  
+                <div class="col-8 mt-5" >
+                    <h6  >In This Category</h6> 
+                    <div class="d-flex flex-wrap justify-content-between">
+                    {% for device in products %}
+                        {% if device.id != product.id %}
+                            <div class="card border border-0 shadow-sm d-inline-block m-1 mt-3" style="width: 14rem;" >
+                                <img class=" card-img-top" src="{{ device.productimage_set.first.image.url }}" alt="">
+                                <div class="card-body">
+                                    <h6 class="align-center card-title">{{ device.title }}</h6>
+                                    <span class="center card-text">{{ device.price }}</span>
+                                    <div class="buttons d-flex flex-wrap justify-content-between ">
+                                        <a href="{% url 'products:product_detail' device.id %}" class="btn btn-outline-primary" >Details</a>
+                                        <a href="{% url 'users:addremovesaved' device.id %}" class="save-icon" data-product-id="{{ i.id }}">
+                                            {% if device in user.saved_products.all %}
+                                                <i class="bi bi-bookmark-fill text-success"></i>
+                                            {% else %}
+                                                <i class="bi bi-bookmark"></i>
+                                            {% endif %}
+                                        </a>  
+                                    </div>
+                                </div>
+                            </div>  
+                        {% endif %}
+                   {% endfor %}
+                </div>
+                </div>
+                <div class="col-4 mt-5 shadow-sm ">
+                    <h6 class="pt-2" >Add comment</h6>
+                    <form action="{% url 'products:new_comment' product.id %}" method="post" class="input-group"> {% csrf_token %}
+                        {% csrf_token %}
+                        <input class="form-control" name="body" type="text" placeholder="Type your comment..." aria-describedby="'button-addon" >
+                        <button class="btn btn-outline-success" type="submit" id="button-addon">Send</button>
+                    </form>  
+                    <hr>
+                    <h6>Comments</h6>
+                    {% for i in product.comment_set.all %}
+                        <small class="text-muted" >@{{i.author}} | {{i.date}}</small>
+                        <p>{{i.body}}
+                            {% if request.user == i.author %}
+                            <small><a href="{% url 'products:comment_delete' product.id i.id %}">delete</a></small>
+                            {% endif %}
+                        </p>  
+                   {% endfor %}
+                </div>
+            </div>
+  
+    </div>
+    </div>
+    <!-- Product Detail End -->
+
+{% endblock content %}
